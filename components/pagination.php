@@ -5,6 +5,8 @@
         'format' => '/page/%#%',
         'current' => $paged,
         'total' => $query->max_num_pages,
+        'show_all' => true,
     ));
     ?>
 </div>
+

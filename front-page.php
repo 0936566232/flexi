@@ -6,7 +6,13 @@
         </div>
         <div class="news__filter">
             <div class="filter-form">
-                <form id="news-filter-form" action="<?php echo esc_url(admin_url('admin-ajax.php')); ?>" method="GET">
+                <form
+                        id="news-filter-form"
+                        class="news-filter-form"
+                        action="<?php echo esc_url(admin_url('admin-ajax.php')); ?>"
+                        method="GET"
+                        data-page="1">
+
                     <?php
                     $terms = get_terms(array(
                         'taxonomy' => 'news_category',
@@ -48,7 +54,7 @@
                 <?php
                 wp_reset_postdata();
             else :
-                echo 'No posts found';
+                echo 'No posts found static';
             endif;
             ?>
         </div>
