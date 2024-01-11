@@ -1,0 +1,120 @@
+.container, .header, .footer {
+    width: 1180px;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+.header, .footer {
+    text-align: center;
+}
+
+@media (max-width: 1400px) {
+    .container, .header, .footer {
+        max-width: calc(100% - 60px);
+    }
+}
+
+@media (max-width: 1180px) {
+    .container, .header, .footer {
+        max-width: calc(100% - 60px);
+    }
+}
+
+@media (max-width: 992px) {
+    .container, .header, .footer {
+        max-width: calc(100% - 40px);
+    }
+}
+
+@media (max-width: 768px) {
+    .container, .header, .footer {
+        max-width: calc(100% - 40px);
+    }
+}
+
+@media (max-width: 576px) {
+    .container, .header, .footer {
+        max-width: calc(100% - 40px);
+    }
+}
+
+body {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+body main {
+    -webkit-box-flex: 2;
+    -ms-flex-positive: 2;
+    flex-grow: 2;
+    height: 100%;
+}
+
+.news-title h1 {
+    padding-top: 36px;
+    padding-bottom: 36px;
+    font-size: 36px;
+}
+
+.news__items {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-top: 30px;
+}
+
+.news__item {
+
+}
+
+.news__item-link:hover {
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+}
+
+.news__item-link {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    text-decoration: none;
+    padding: 36px;
+    border-radius: 6px;
+    border: 1px solid #E5E5E5;
+    margin-bottom: 24px;
+    background: #E5E5E5;
+    transition: .5s ease;
+}
+
+.nav__item-title {
+    font-size: 24px;
+    color: #146a6c;
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+.news__terms {
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+.news__terms {
+    display: flex;
+}
+
+.news__terms li {
+    margin-right: 12px;
+    background: #146a6c;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 18px;
+}
