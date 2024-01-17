@@ -124,82 +124,87 @@ function modify_main_query_for_news($query)
 add_action('pre_get_posts', 'modify_main_query_for_news');
 
 
-function news_filter_function()
-{
-    $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
-    $selected_categories = isset($_GET['news_category']) ? $_GET['news_category'] : array();
-    $args = array(
-        'post_type' => 'news',
-        'posts_per_page' => 5,
-        'paged' => $paged,
-    );
-
-    if (!empty($selected_categories)) {
-        $args['tax_query'] = array(
-            array(
-                'taxonomy' => 'news_category',
-                'field' => 'id',
-                'terms' => $selected_categories,
-                'operator' => 'IN',
-            ),
+class NewsFilter {
+    public function filter() {
+        $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+        $selected_categories = isset($_GET['news_category']) ? $_GET['news_category'] : array();
+        $args = array(
+            'post_type' => 'news',
+            'posts_per_page' => 5,
+            'paged' => $paged,
         );
+
+        if (!empty($selected_categories)) {
+            $args['tax_query'] = array(
+                array(
+                    'taxonomy' => 'news_category',
+                    'field' => 'id',
+                    'terms' => $selected_categories,
+                    'operator' => 'IN',
+                ),
+            );
+        }
+
+        $query = new WP_Query($args);
+
+        if ($query->have_posts()) :
+            while ($query->have_posts()) : $query->the_post();
+                include 'components/news-card.php';
+            endwhile;
+            include 'components/pagination.php';
+            wp_reset_postdata();
+        else :
+            echo 'No posts found ajax';
+        endif;
+
+        die();
     }
-
-    $query = new WP_Query($args);
-
-    if ($query->have_posts()) :
-        while ($query->have_posts()) : $query->the_post();
-            include 'components/news-card.php';
-        endwhile;
-        include 'components/pagination.php';
-        wp_reset_postdata();
-    else :
-        echo 'No posts found ajax';
-    endif;
-
-    die();
 }
 
-add_action('wp_ajax_news_filter', 'news_filter_function');
-add_action('wp_ajax_nopriv_news_filter', 'news_filter_function');
+class LoadPosts {
+    public function load() {
+        $paged = $_POST['page'];
+        $selected_categories = isset($_POST['news_category']) ? $_POST['news_category'] : array();
+        parse_str($selected_categories, $selected_categories);
 
-function load_posts() {
-    $paged = $_POST['page'];
-    $selected_categories = isset($_POST['news_category']) ? $_POST['news_category'] : array();
-    parse_str($selected_categories, $selected_categories); // Раскодируем строку
-
-    $args = array(
-        'post_type' => 'news',
-        'posts_per_page' => 5,
-        'paged' => $paged,
-    );
-
-    if (!empty($selected_categories)) {
-        $args['tax_query'] = array(
-            array(
-                'taxonomy' => 'news_category',
-                'field' => 'id',
-                'terms' => $selected_categories['news_category'],
-                'operator' => 'IN',
-            ),
+        $args = array(
+            'post_type' => 'news',
+            'posts_per_page' => 5,
+            'paged' => $paged,
         );
+
+        if (!empty($selected_categories)) {
+            $args['tax_query'] = array(
+                array(
+                    'taxonomy' => 'news_category',
+                    'field' => 'id',
+                    'terms' => $selected_categories['news_category'],
+                    'operator' => 'IN',
+                ),
+            );
+        }
+
+        $query = new WP_Query($args);
+
+        if ($query->have_posts()) :
+            while ($query->have_posts()) : $query->the_post();
+                include 'components/news-card.php';
+            endwhile;
+            include 'components/pagination.php';
+            wp_reset_postdata();
+        else :
+            echo 'No posts found load';
+        endif;
+
+        die();
     }
-
-    $query = new WP_Query($args);
-
-    if ($query->have_posts()) :
-        while ($query->have_posts()) : $query->the_post();
-            include 'components/news-card.php';
-        endwhile;
-        include 'components/pagination.php';
-        wp_reset_postdata();
-    else :
-        echo 'No posts found load';
-    endif;
-
-    die();
 }
 
-add_action('wp_ajax_load_posts', 'load_posts');
-add_action('wp_ajax_nopriv_load_posts', 'load_posts');
+$news_filter = new NewsFilter();
+add_action('wp_ajax_news_filter', array($news_filter, 'filter'));
+add_action('wp_ajax_nopriv_news_filter', array($news_filter, 'filter'));
+
+$load_posts = new LoadPosts();
+add_action('wp_ajax_load_posts', array($load_posts, 'load'));
+add_action('wp_ajax_nopriv_load_posts', array($load_posts, 'load'));
 
